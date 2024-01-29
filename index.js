@@ -27,6 +27,7 @@ function createBoard() {
         card.setAttribute('src', './assets/default.png');
         card.setAttribute('data-id', i);
         card.addEventListener('click', flipCard);
+        
         gameContent.appendChild(card);
     }
 }
@@ -36,8 +37,12 @@ function checkMatch() {
     const cards = document.querySelectorAll('#game_content img');
     let option1ID = cardChosenID[0];
     let option2ID = cardChosenID[1];
+    let score = document.querySelector('#score')
 
     if (cardChosen[0] === cardChosen[1] && option1ID !== option2ID) {
+        score.innerHTML = isNaN(parseInt(score.innerHTML)) ? 0 : score.innerHTML;
+        score.innerHTML = parseInt(score.innerHTML) + 20;
+
         cards[option1ID].setAttribute('src', './assets/images.jpeg');
         cards[option2ID].setAttribute('src', './assets/images.jpeg');
         cards[option1ID].removeEventListener('click', flipCard);
@@ -52,17 +57,19 @@ function checkMatch() {
     cardChosenID = [];
 
     if (cardWon.length === cardsData.length / 2) {
-        alert('Congratulations! You won!');
+        //MUST BE MODAL
     }
 }
 
 function flipCard() {
+    let cardFlipSound = new Audio('./sounds/cardFlip.mp3')
+    cardFlipSound.play()
     const cardID = this.getAttribute('data-id');
     cardChosen.push(cardsData[cardID].name);
     cardChosenID.push(cardID);
     this.setAttribute('src', cardsData[cardID].img);
 
     if (cardChosen.length === 2) {
-        setTimeout(checkMatch, 500);
+        setTimeout(checkMatch, 300);
     }
 }
